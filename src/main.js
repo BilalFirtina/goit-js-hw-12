@@ -23,7 +23,7 @@ form.addEventListener("submit", async (e) => {
           'Sorry, there are no images matching your search query. Please try again!',
         position: 'topRight',
         timeout: 3000,
-        iconUrl: '/error.png',
+        iconUrl: '/goit-js-hw-12/error.png',
       });
     }
     try {
@@ -37,7 +37,7 @@ form.addEventListener("submit", async (e) => {
               'Sorry, there are no images matching your search query. Please try again!',
             position: 'topRight',
             timeout: 3000,
-            iconUrl: '/error.png',
+            iconUrl: '/goit-js-hw-12/error.png',
           });
         }
         showButton();
@@ -47,7 +47,7 @@ form.addEventListener("submit", async (e) => {
           message:`${error.message}`,
           position: 'topRight',
           timeout: 3000,
-          iconUrl: './public/error.png',
+          iconUrl: '/goit-js-hw-12/error.png',
         });
     }
     form.reset();
