@@ -1,4 +1,4 @@
-import { getImages,resetRequest } from "./js/pixabay-api";
+import { getImages,request,resetRequest } from "./js/pixabay-api";
 import { createGallery, resetGallery,showButton,hideButton, showLoader, hideLoader } from "./js/render-functions";
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -27,7 +27,7 @@ form.addEventListener("submit", async (e) => {
       });
     }
     try {
-        const images = await getImages(inputValue.trim());
+        const images = (await getImages(inputValue.trim())).data.hits;
         createGallery(images, 'afterbegin');
       if (images.length <= 0) {
           hideLoader();
@@ -56,9 +56,20 @@ form.addEventListener("submit", async (e) => {
 loadingButton.addEventListener("click", async () => {
   hideButton();
   showLoader();
-    const images = await getImages(inputValue.trim());
-  createGallery(images, "beforeend");
+  const images = await getImages(inputValue.trim());
+  if (Math.ceil(images.data.totalHits / 40) < request) {
+    hideLoader();
+    hideButton();
+    return iziToast.info({
+      message: "We're sorry, but you've reached the end of search results",
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
+  }
+  createGallery(images.data.hits, 'beforeend');
   hideLoader();
   showButton();
 
+  console.log(images);
 })
