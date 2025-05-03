@@ -10,7 +10,7 @@ const loadingButton = document.querySelector(".loading-button")
 let inputValue;
 
 form.addEventListener("submit", async (e) => {
-    inputValue = input.value;
+  inputValue = input.value;
     e.preventDefault();
     resetGallery();
     showLoader();
@@ -44,7 +44,7 @@ form.addEventListener("submit", async (e) => {
         hideLoader();
     } catch (error) {
         iziToast.error({
-          message:`${error.message}`,
+          message:`a:${error.message}`,
           position: 'topRight',
           timeout: 3000,
           iconUrl: '/goit-js-hw-12/error.png',
@@ -70,6 +70,4 @@ loadingButton.addEventListener("click", async () => {
   createGallery(images.data.hits, 'beforeend');
   hideLoader();
   showButton();
-
-  console.log(images);
 })

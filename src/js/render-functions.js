@@ -4,6 +4,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 const gallery = document.querySelector(".gallery");
 const loader = document.querySelector(".loader-div");
 const button = document.querySelector('.loading-button');
+export let position;
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
@@ -31,10 +32,10 @@ export const createGallery = function (images,position) {
     </section></div>`;
     }).join("");
     gallery.insertAdjacentHTML(position, createdHtml);
-    lightbox.refresh();
+  lightbox.refresh();
 }
 export const resetGallery = () => {
-    gallery.innerHTML="";
+  gallery.innerHTML = "";
 }
 export const showLoader = () => {
   loader.style.display = "flex";
