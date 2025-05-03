@@ -5,7 +5,6 @@ const key = '49926039-70f4c194fbb0b63068557ead5';
 let request = 1;
 export const getImages = async (input) => {
     const finishedURL = `${URL}?key=${key}&q=${input}&image_type=photo&orientation=horizontal&safesearch=true&page=${request}&per_page=40`;
-    console.log(request);
     request++;
     return (await axios.get(finishedURL)).data.hits;
 }

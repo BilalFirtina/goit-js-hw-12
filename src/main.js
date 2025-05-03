@@ -16,26 +16,28 @@ form.addEventListener("submit", async (e) => {
     showLoader();
     resetRequest();
     hideButton();
-    if (inputValue.trim() === '') {
+  if (inputValue.trim() === '') {
+    hideLoader();
       return iziToast.error({
         message:
           'Sorry, there are no images matching your search query. Please try again!',
         position: 'topRight',
         timeout: 3000,
-        iconUrl: './public/error.png',
+        iconUrl: '/error.png',
       });
     }
     try {
         const images = await getImages(inputValue.trim());
         createGallery(images, 'afterbegin');
-        if (images.length <= 0) {
+      if (images.length <= 0) {
+          hideLoader();
           form.reset();
           return iziToast.error({
             message:
               'Sorry, there are no images matching your search query. Please try again!',
             position: 'topRight',
             timeout: 3000,
-            iconUrl: './public/error.png',
+            iconUrl: '/error.png',
           });
         }
         showButton();
@@ -52,7 +54,11 @@ form.addEventListener("submit", async (e) => {
 })
 
 loadingButton.addEventListener("click", async () => {
+  hideButton();
+  showLoader();
     const images = await getImages(inputValue.trim());
-    createGallery(images,"beforeend");
-    showButton();
+  createGallery(images, "beforeend");
+  hideLoader();
+  showButton();
+
 })
