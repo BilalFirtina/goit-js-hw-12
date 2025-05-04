@@ -1,7 +1,7 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const gallery = document.querySelector(".gallery");
+export const gallery = document.querySelector(".gallery");
 const loader = document.querySelector(".loader-div");
 const button = document.querySelector('.loading-button');
 export let position;

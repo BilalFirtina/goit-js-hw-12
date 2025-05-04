@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const URL = "https://pixabay.com/api/"
+const URL = 'https://pixabay.com/api/';
 const key = '49926039-70f4c194fbb0b63068557ead5';
 export let request = 1;
 
@@ -9,8 +9,8 @@ export const getImages = async searchQuery => {
   return await axios.get(finishedURL);
 };
 export const resetRequest = () => {
-    return request = 1;
-}
+  return (request = 1);
+};
 export const increaseRequest = () => {
-    request++;
-}
+  request++;
+};
