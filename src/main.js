@@ -1,4 +1,4 @@
-import { getImages,request,resetRequest } from "./js/pixabay-api";
+import { getImages,increaseRequest,request,resetRequest } from "./js/pixabay-api";
 import { createGallery, resetGallery,showButton,hideButton, showLoader, hideLoader } from "./js/render-functions";
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -56,6 +56,7 @@ form.addEventListener("submit", async (e) => {
 loadingButton.addEventListener("click", async () => {
   hideButton();
   showLoader();
+  increaseRequest();
   const images = await getImages(inputValue.trim());
   if (Math.ceil(images.data.totalHits / 40) < request) {
     hideLoader();

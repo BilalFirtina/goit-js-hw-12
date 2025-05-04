@@ -13,13 +13,13 @@ body {
   color: #212121;
 }
 
-.container {
+.form {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  column-gap: 8px;
-  font-weight: 500;
-  margin-top: 30px;
+  row-gap: 10px;
+  margin-top: 10px;
 }
 .button {
     background-color:#4E75FF;
@@ -29,22 +29,19 @@ body {
     font-family: Montserrat;
     font-weight: 500;
     font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 4%;
     width: 91px;
     height: 40px;
-    gap: 10px;
 }
-.form-input {
+.input {
     height: 40px;
     width: 272px;
     border: 0.1px solid rgb(166, 161, 161);
     box-shadow: -2px 2px 3px 0.2px #aaa6a6;
 }
-.form-input:hover {
+.input:hover {
     border: 2px solid black;
 }
-.form-input:focus {
+.input:focus {
     border: 2px solid #6C8CFF;
     outline: none;
 }
@@ -190,4 +187,7 @@ main{
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+.form label:hover{
+  cursor: pointer;
 }
