@@ -34,13 +34,13 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  const images = (await getImages(inputValue.trim(),page)).data;
-  if (images.totalHits < 40) {
+  const images = (await getImages(inputValue.trim(), page));
+  if (images.totalHits > 0 && images.totalHits < 40) {
     createGallery(images.hits);
     hideLoader();
     form.reset();
     return;
-}
+  }
   if (images.hits.length === 0) {
     hideLoader();
     form.reset();
@@ -63,7 +63,7 @@ loadingButton.addEventListener('click', async () => {
   showLoader();
   page += 1;
   try {
-    const images = (await loadMore(inputValue.trim(), page)).data;
+    const images = (await loadMore(inputValue.trim(), page));
     createGallery(images.hits);
     hideLoader();
     showButton();

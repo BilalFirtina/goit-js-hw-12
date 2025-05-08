@@ -14,8 +14,8 @@ export const getImages = async (searchQuery,page) => {
     safesearch: true,
   });
   const finishedURL = `https://pixabay.com/api/?${params.toString()}&q=${searchQuery}`;
-  const result = await axios.get(finishedURL);
-  totalPages = Math.ceil(result.data.totalHits / 40);
+  const result = (await axios.get(finishedURL)).data;
+  totalPages = Math.ceil(result.totalHits / 40);
   return result;
 };
 
@@ -38,6 +38,6 @@ export const loadMore = async (searchQuery, page) => {
     safesearch: true,
   });
   const finishedURL = `https://pixabay.com/api/?${params.toString()}&q=${searchQuery}`;
-  const result = await axios.get(finishedURL);
+  const result = (await axios.get(finishedURL)).data;
   return result;
 }
