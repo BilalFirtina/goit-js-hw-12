@@ -4,7 +4,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 let totalPages = 0;
 
-export const getImages = async (searchQuery,page) => {
+export const getImages = async (searchQuery,page=1) => {
   const params = new URLSearchParams({
     key: '49926039-70f4c194fbb0b63068557ead5',
     page: page,
@@ -19,7 +19,7 @@ export const getImages = async (searchQuery,page) => {
   return result;
 };
 
-export const loadMore = async (searchQuery, page) => {
+export const loadMore = async (searchQuery, page=1) => {
   if (page > totalPages) {
     iziToast.info({
       message: "We're sorry, but you've reached the end of search results",
