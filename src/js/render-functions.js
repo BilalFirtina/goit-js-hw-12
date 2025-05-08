@@ -42,7 +42,6 @@ export const createGallery = function (images) {
           </div>
         </li>`;
     }).join("");
-  console.log(createdHtml);
     gallery.insertAdjacentHTML("beforeend", createdHtml);
   lightbox.refresh();
 }
