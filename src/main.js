@@ -1,4 +1,4 @@
-import {getImages, loadMore} from './js/pixabay-api';
+import {getImages} from './js/pixabay-api';
 import {
   createGallery,
   clearGallery,
@@ -15,7 +15,8 @@ const form = document.querySelector('.form');
 const input = document.querySelector('.input');
 const loadingButton = document.querySelector('.loading-button');
 let inputValue;
-let page=1;
+let page = 1;
+let totalPages = 0;
 
 form.addEventListener('submit', async e => {
   inputValue = input.value;
@@ -35,6 +36,7 @@ form.addEventListener('submit', async e => {
     });
   }
   const images = (await getImages(inputValue.trim(), page));
+  totalPages = Math.ceil(images.totalHits / 40);
   if (images.totalHits > 0 && images.totalHits < 40) {
     createGallery(images.hits);
     hideLoader();
@@ -59,11 +61,23 @@ form.addEventListener('submit', async e => {
 });
 
 loadingButton.addEventListener('click', async () => {
-  hideButton();
   showLoader();
   page += 1;
+  if (page > totalPages) {
+    iziToast.info({
+      message: "We're sorry, but you've reached the end of search results",
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
+    hideLoader();
+    hideButton();
+    return;
+  }
+
+
   try {
-    const images = (await loadMore(inputValue.trim(), page));
+    const images = (await getImages(inputValue.trim(), page));
     createGallery(images.hits);
     hideLoader();
     showButton();
