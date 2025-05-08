@@ -2,11 +2,9 @@ import axios from 'axios';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-let page = 1;
 let totalPages = 0;
 
-
-export const getImages = async (searchQuery) => {
+export const getImages = async (searchQuery,page) => {
   const params = new URLSearchParams({
     key: '49926039-70f4c194fbb0b63068557ead5',
     page: page,
@@ -16,13 +14,12 @@ export const getImages = async (searchQuery) => {
     safesearch: true,
   });
   const finishedURL = `https://pixabay.com/api/?${params.toString()}&q=${searchQuery}`;
-
   const result = await axios.get(finishedURL);
   totalPages = Math.ceil(result.data.totalHits / 40);
   return result;
 };
-export const loadMore = async (searchQuery) => {
-  page += 1;
+
+export const loadMore = async (searchQuery, page) => {
   if (page > totalPages) {
     iziToast.info({
       message: "We're sorry, but you've reached the end of search results",
@@ -44,5 +41,3 @@ export const loadMore = async (searchQuery) => {
   const result = await axios.get(finishedURL);
   return result;
 }
-
-export const resetPage = () => page = 1;

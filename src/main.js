@@ -1,4 +1,4 @@
-import {getImages, loadMore, resetPage} from './js/pixabay-api';
+import {getImages, loadMore} from './js/pixabay-api';
 import {
   createGallery,
   clearGallery,
@@ -15,14 +15,15 @@ const form = document.querySelector('.form');
 const input = document.querySelector('.input');
 const loadingButton = document.querySelector('.loading-button');
 let inputValue;
+let page=1;
 
 form.addEventListener('submit', async e => {
   inputValue = input.value;
   e.preventDefault();
-  resetPage();
   clearGallery();
   showLoader();
   hideButton();
+  page = 1;
   if (inputValue.trim() === '') {
     hideLoader();
     return iziToast.error({
@@ -33,7 +34,7 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  const images = (await getImages(inputValue.trim())).data;
+  const images = (await getImages(inputValue.trim(),page)).data;
   if (images.totalHits < 40) {
     createGallery(images.hits);
     hideLoader();
@@ -60,8 +61,9 @@ form.addEventListener('submit', async e => {
 loadingButton.addEventListener('click', async () => {
   hideButton();
   showLoader();
+  page += 1;
   try {
-    const images = (await loadMore(inputValue.trim())).data;
+    const images = (await loadMore(inputValue.trim(), page)).data;
     createGallery(images.hits);
     hideLoader();
     showButton();
