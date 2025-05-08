@@ -9,7 +9,7 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
-export const createGallery = function (images,position) {
+export const createGallery = function (images) {
     const createdHtml = images.map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => {
         return `<li class="image-li">
            <a href="${largeImageURL}"> <img class="li-img" src="${webformatURL}" alt="${tags
@@ -42,7 +42,8 @@ export const createGallery = function (images,position) {
           </div>
         </li>`;
     }).join("");
-    gallery.insertAdjacentHTML(position, createdHtml);
+  console.log(createdHtml);
+    gallery.insertAdjacentHTML("beforeend", createdHtml);
   lightbox.refresh();
 }
 export const clearGallery = () => {

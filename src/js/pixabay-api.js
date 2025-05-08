@@ -7,7 +7,6 @@ let totalPages = 0;
 
 
 export const getImages = async (searchQuery) => {
-  page = 1;
   const params = new URLSearchParams({
     key: '49926039-70f4c194fbb0b63068557ead5',
     page: page,
@@ -20,7 +19,7 @@ export const getImages = async (searchQuery) => {
 
   const result = await axios.get(finishedURL);
   totalPages = Math.ceil(result.data.totalHits / 40);
-  return result.data.hits;
+  return result;
 };
 export const loadMore = async (searchQuery) => {
   page += 1;
@@ -33,7 +32,6 @@ export const loadMore = async (searchQuery) => {
     });
     return;
   }
-
   const params = new URLSearchParams({
     key: '49926039-70f4c194fbb0b63068557ead5',
     page: page,
@@ -44,5 +42,7 @@ export const loadMore = async (searchQuery) => {
   });
   const finishedURL = `https://pixabay.com/api/?${params.toString()}&q=${searchQuery}`;
   const result = await axios.get(finishedURL);
-  return result.data.hits;
+  return result;
 }
+
+export const resetPage = () => page = 1;

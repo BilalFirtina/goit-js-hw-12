@@ -1,4 +1,4 @@
-import {getImages, loadMore} from './js/pixabay-api';
+import {getImages, loadMore, resetPage} from './js/pixabay-api';
 import {
   createGallery,
   clearGallery,
@@ -19,6 +19,7 @@ let inputValue;
 form.addEventListener('submit', async e => {
   inputValue = input.value;
   e.preventDefault();
+  resetPage();
   clearGallery();
   showLoader();
   hideButton();
@@ -32,19 +33,25 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  const images = await getImages(inputValue.trim());
-    if (images.length <= 0) {
-      hideLoader();
-      form.reset();
-      return iziToast.error({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
-        timeout: 3000,
-        iconUrl: '/goit-js-hw-12/error.png',
-      });
-    }
-    createGallery(images, 'afterbegin');
+  const images = (await getImages(inputValue.trim())).data;
+  if (images.totalHits < 40) {
+    createGallery(images.hits);
+    hideLoader();
+    form.reset();
+    return;
+}
+  if (images.hits.length === 0) {
+    hideLoader();
+    form.reset();
+    return iziToast.error({
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
+  }
+    createGallery(images.hits);
     showButton();
     hideLoader();
     form.reset();
@@ -54,8 +61,8 @@ loadingButton.addEventListener('click', async () => {
   hideButton();
   showLoader();
   try {
-    const images = await loadMore(inputValue.trim());
-    createGallery(images, 'beforeend');
+    const images = (await loadMore(inputValue.trim())).data;
+    createGallery(images.hits);
     hideLoader();
     showButton();
   } catch (error) {
