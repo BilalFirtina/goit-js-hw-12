@@ -64,7 +64,6 @@ loadingButton.addEventListener('click', async () => {
     return;
   }
   const { height:cardHeight } = gallery.firstElementChild.getBoundingClientRect();
-  console.log(cardHeight);
   let options={
     top: cardHeight*2,
     left: 0,
