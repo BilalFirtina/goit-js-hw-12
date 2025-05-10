@@ -1,4 +1,4 @@
-import {getImages} from './js/pixabay-api';
+import getImages from './js/pixabay-api';
 import {
   createGallery,
   clearGallery,
@@ -19,13 +19,13 @@ let page = 1;
 let totalPages = 0;
 
 form.addEventListener('submit', async e => {
-  inputValue = input.value;
+  inputValue = input.value.trim();
   e.preventDefault();
   clearGallery();
   showLoader();
   hideButton();
   page = 1;
-  if (inputValue.trim() === '') {
+  if (inputValue === '') {
     hideLoader();
     return iziToast.error({
       message:
@@ -35,14 +35,9 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  const images = (await getImages(inputValue.trim(), page));
+  const images = (await getImages(inputValue, page));
   totalPages = Math.ceil(images.totalHits / 40);
-  if (images.totalHits > 0 && images.totalHits < 40) {
-    createGallery(images.hits);
-    hideLoader();
-    form.reset();
-    return;
-  }
+
   if (images.hits.length === 0) {
     hideLoader();
     form.reset();
@@ -54,7 +49,12 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-    createGallery(images.hits);
+  createGallery(images.hits);
+  if (gallery.children.length === images.totalHits) {
+    hideLoader();
+    form.reset();
+    return;
+  }
     showButton();
     hideLoader();
     form.reset();
@@ -74,10 +74,8 @@ loadingButton.addEventListener('click', async () => {
     hideButton();
     return;
   }
-
-
   try {
-    const images = (await getImages(inputValue.trim(), page));
+    const images = (await getImages(inputValue, page));
     createGallery(images.hits);
     hideLoader();
     showButton();
