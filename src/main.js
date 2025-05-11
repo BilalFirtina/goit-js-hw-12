@@ -1,7 +1,6 @@
 import getImages from './js/pixabay-api';
 import {
   createGallery,
-  clearGallery,
   showButton,
   hideButton,
   showLoader,
@@ -21,7 +20,7 @@ let totalPages = 0;
 form.addEventListener('submit', async e => {
   inputValue = input.value.trim();
   e.preventDefault();
-  clearGallery();
+  input.value ="";
   showLoader();
   hideButton();
   page = 1;
@@ -35,11 +34,32 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  const images = (await getImages(inputValue, page));
-  totalPages = Math.ceil(images.totalHits / 40);
-
-  if (images.hits.length === 0) {
+  try {
+    const images = (await getImages(inputValue, page));
+    totalPages = Math.ceil(images.totalHits / 40);
+    handleImages(images.hits);
+    createGallery(images.hits);
+    checkButton(images.totalHits);
+  } catch (error) {
+    console.error(error.message)
+  } finally {
     hideLoader();
+  }
+    showButton();
+    hideLoader();
+    form.reset();
+});
+
+function checkButton(images) {
+  if (gallery.children.length === images) {
+    hideLoader();
+    form.reset();
+    return;
+  }
+}
+
+function handleImages(images) {
+  if (images.length === 0) {
     form.reset();
     return iziToast.error({
       message:
@@ -49,16 +69,7 @@ form.addEventListener('submit', async e => {
       iconUrl: '/goit-js-hw-12/error.png',
     });
   }
-  createGallery(images.hits);
-  if (gallery.children.length === images.totalHits) {
-    hideLoader();
-    form.reset();
-    return;
-  }
-    showButton();
-    hideLoader();
-    form.reset();
-});
+}
 
 loadingButton.addEventListener('click', async () => {
   showLoader();
@@ -77,12 +88,13 @@ loadingButton.addEventListener('click', async () => {
   try {
     const images = (await getImages(inputValue, page));
     createGallery(images.hits);
-    hideLoader();
     showButton();
   } catch (error) {
-    hideLoader();
+    console.error(error);
     hideButton();
     return;
+  } finally {
+    hideLoader();
   }
   const { height:cardHeight } = gallery.firstElementChild.getBoundingClientRect();
   let options={

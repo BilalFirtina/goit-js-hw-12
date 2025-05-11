@@ -45,9 +45,6 @@ export const createGallery = function (images) {
     gallery.insertAdjacentHTML("beforeend", createdHtml);
   lightbox.refresh();
 }
-export const clearGallery = () => {
-  gallery.innerHTML = "";
-}
 export const showLoader = () => {
   loader.style.display = "flex";
 }
