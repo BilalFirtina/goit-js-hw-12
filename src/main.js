@@ -22,6 +22,7 @@ loadingButton.addEventListener("click", loadMore);
 async function formSubmit(e) {
   e.preventDefault();
   searchText = input.value.trim();
+  showLoader();
   if (!searchText) {
     hideLoader();
     return iziToast.error({
@@ -37,19 +38,27 @@ async function formSubmit(e) {
   currentPage = 1;
   totalHits = 0;
   gallery.innerHTML = "";
-  hideButton();
-  showLoader();
-try {
+  try {
   const images = await getImages(searchText, currentPage);
   if (!images || !images.hits) {
-    throw new Error('No images returned from API');
+    return iziToast.info({
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
   }
   totalHits = images.totalHits;
   handleSearchResults(images.hits);
-} catch (error) {
-  console.error(error);
-  throw error;
-}
+  } catch (error) {
+    iziToast.error({
+      message: error.message,
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
+    }
 }
 
 async function loadMore() {
@@ -58,12 +67,22 @@ async function loadMore() {
   try {
     const images = await getImages(searchText, currentPage);
     if (!images || !images.hits) {
-      throw new Error('No images returned from API');
+      return iziToast.info({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+        timeout: 3000,
+        iconUrl: '/goit-js-hw-12/error.png',
+      });
     }
     handleSearchResults(images.hits);
   } catch (error) {
-    console.error(error);
-    throw error;
+    iziToast.error({
+      message: error.message,
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
   }
 }
 
@@ -81,7 +100,8 @@ function handleSearchResults(images) {
     return;
   }
   createGallery(images);
-  if (gallery.children.length >= totalHits) {
+  const galleryLength = gallery.querySelectorAll('.image-li').length;
+  if (galleryLength >= totalHits) {
     hideButton();
     hideLoader();
   } else {
