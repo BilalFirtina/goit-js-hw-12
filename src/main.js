@@ -104,6 +104,13 @@ function handleSearchResults(images) {
   if (galleryLength >= totalHits) {
     hideButton();
     hideLoader();
+    return iziToast.info({
+      message:
+        "We're sorry, but you've reached the end of search results.",
+      position: 'topRight',
+      timeout: 3000,
+      iconUrl: '/goit-js-hw-12/error.png',
+    });
   } else {
     showButton();
     hideLoader();
