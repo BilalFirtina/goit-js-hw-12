@@ -77,18 +77,6 @@ async function loadMore() {
   try {
     const images = await getImages(searchText, currentPage);
     hideLoader();
-
-    if (!images || !images.hits || images.hits.length === 0) {
-      hideButton(); // yeni sonuç yoksa butonu gizle
-      return iziToast.info({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
-        timeout: 3000,
-        iconUrl: '/goit-js-hw-12/error.png',
-      });
-    }
-
     handleSearchResults(images.hits);
   } catch (error) {
     hideLoader();
@@ -102,7 +90,7 @@ async function loadMore() {
 }
 
 function handleSearchResults(images) {
-  if (!images.length) {
+  if (images.length===0) {
     hideLoader();
     hideButton();
     return iziToast.error({
@@ -134,8 +122,8 @@ function handleSearchResults(images) {
 }
 
 function smoothScroll() {
-  const { height: cardHeight } =
-    gallery.firstElementChild.getBoundingClientRect();
+  const element = document.querySelector('.image-li');
+  const { height: cardHeight } = element.getBoundingClientRect();
   window.scrollBy({
     top: cardHeight * 2,
     left: 0,
