@@ -19,7 +19,6 @@ let heightScroll = 0;
 let inputData = '';
 let page = 1;
 
-//------------------ form handler -------------------------
 form.addEventListener('submit', handleFormSubmit);
 
 async function handleFormSubmit(e) {
@@ -38,6 +37,7 @@ async function handleFormSubmit(e) {
   }
   gallery.innerHTML = "";
   showImages();
+  input.placeholder = `En son arama: ${inputData}`;
 }
 async function showImages() {
   showLoader();
