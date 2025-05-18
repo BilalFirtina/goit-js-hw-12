@@ -15,7 +15,7 @@ const getImages = async (query,page) => {
     const response = (await axios.get("https://pixabay.com/api/", options));
     return response.data;
   } catch (error) {
-    console.log(error.message)
+    throw new Error(error.message);
   }
 };
 export default getImages;

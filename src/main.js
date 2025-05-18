@@ -13,120 +13,88 @@ import 'izitoast/dist/css/iziToast.min.css';
 const form = document.querySelector('.form');
 const input = document.querySelector('.input');
 const loadingButton = document.querySelector('.loading-button');
-let searchText = '';
-let currentPage = 1;
-let totalHits = 0;
 
-form.addEventListener('submit', formSubmit);
-loadingButton.addEventListener('click', loadMore);
+let liElem;
+let heightScroll = 0;
+let inputData = '';
+let page = 1;
 
-async function formSubmit(e) {
+//------------------ form handler -------------------------
+form.addEventListener('submit', handleFormSubmit);
+
+async function handleFormSubmit(e) {
   e.preventDefault();
-  searchText = input.value.trim();
-  showLoader();
-  hideButton(); // Galeri temizlenirken butonu da gizle
-  gallery.innerHTML = '';
-
-  if (!searchText) {
-    hideLoader();
-    return iziToast.error({
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
+  inputData = input.value.trim().toLowerCase();
+  page = 1;
+  if (!inputData) {
+    iziToast.info({
+      message: 'The input field is empty, try again.',
       position: 'topRight',
       timeout: 3000,
       iconUrl: '/goit-js-hw-12/error.png',
     });
+    form.reset();
+    return
   }
-
-  input.value = '';
-  input.placeholder = `En son arama: ${searchText}`;
-  currentPage = 1;
-  totalHits = 0;
-
+  gallery.innerHTML = "";
+  showImages();
+}
+async function showImages() {
+  showLoader();
   try {
-    const images = await getImages(searchText, currentPage);
-    hideLoader();
+    const data = await getImages(inputData, page);
 
-    if (!images || !images.hits || images.hits.length === 0) {
-      return iziToast.info({
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
+    if (data.hits.length === 0) {
+      iziToast.warning({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'topRight',
+        timeout: 3000,
+        iconUrl: '/goit-js-hw-12/error.png',
+      });
+      form.reset();
+      return;
+    }
+
+    const images = data.hits;
+    createGallery(images);
+    liElem = document.querySelector('.image-li');
+    heightScroll = liElem.getBoundingClientRect().height * 2;
+    showButton();
+    let maxPages = Math.ceil(data.totalHits / 40);
+    if (maxPages === page) {
+      hideButton();
+      iziToast.info({
+        message: "We're sorry, but you've reached the end of search results.",
         position: 'topRight',
         timeout: 3000,
         iconUrl: '/goit-js-hw-12/error.png',
       });
     }
-
-    totalHits = images.totalHits;
-    handleSearchResults(images.hits);
   } catch (error) {
-    hideLoader();
-    iziToast.error({
-      message: error.message,
+    iziToast.warning({
+      message: 'An error occurred. Please try again later.',
       position: 'topRight',
       timeout: 3000,
       iconUrl: '/goit-js-hw-12/error.png',
     });
+  } finally {
+    hideLoader();
+    form.reset();
   }
 }
 
-async function loadMore() {
-  currentPage += 1;
-  showLoader();
+loadingButton.addEventListener("click",async () => {
+  page++;
+  hideButton();
+  await showImages();
+  scroll(0, heightScroll);
+})
 
-  try {
-    const images = await getImages(searchText, currentPage);
-    hideLoader();
-    handleSearchResults(images.hits);
-  } catch (error) {
-    hideLoader();
-    iziToast.error({
-      message: error.message,
-      position: 'topRight',
-      timeout: 3000,
-      iconUrl: '/goit-js-hw-12/error.png',
-    });
-  }
-}
-
-function handleSearchResults(images) {
-  if (images.length===0) {
-    hideLoader();
-    hideButton();
-    return iziToast.error({
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
-      position: 'topRight',
-      timeout: 3000,
-      iconUrl: '/goit-js-hw-12/error.png',
-    });
-  }
-
-  createGallery(images);
-  const galleryLength = gallery.querySelectorAll('.image-li').length;
-
-  if (galleryLength >= totalHits) {
-    hideButton();
-    iziToast.info({
-      message: "We're sorry, but you've reached the end of search results.",
-      position: 'topRight',
-      timeout: 3000,
-      iconUrl: '/goit-js-hw-12/error.png',
-    });
-  } else {
-    showButton();
-    smoothScroll();
-  }
-
-  hideLoader();
-}
-
-function smoothScroll() {
-  const element = document.querySelector('.image-li');
-  const { height: cardHeight } = element.getBoundingClientRect();
+function scroll(x,y) {
   window.scrollBy({
-    top: cardHeight * 2,
-    left: 0,
+    top: y,
+    left: x,
     behavior: 'smooth',
   });
 }
