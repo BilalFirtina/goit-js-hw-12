@@ -60,9 +60,10 @@ async function showImages() {
     createGallery(images);
     liElem = document.querySelector('.image-li');
     heightScroll = liElem.getBoundingClientRect().height * 2;
-    showButton();
     let maxPages = Math.ceil(data.totalHits / 40);
-    if (maxPages === page) {
+    if (page < maxPages) {
+      showButton();
+    } else {
       hideButton();
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
@@ -70,6 +71,7 @@ async function showImages() {
         timeout: 3000,
         iconUrl: '/goit-js-hw-12/error.png',
       });
+      return;
     }
   } catch (error) {
     iziToast.warning({
